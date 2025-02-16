@@ -442,7 +442,7 @@ def _(mo):
 @app.cell
 def _(check_data_loaded, csv_file, pd):
     # Load the dataset
-    data_youtube = pd.read_csv(csv_file)
+    data_youtube = None
 
     check_data_loaded(data_youtube)
     return (data_youtube,)
@@ -679,7 +679,7 @@ def _(check_max_view, mo, user_input):
 @app.cell
 def _(data_youtube):
     ## Type here
-    data_max_view = data_youtube["Video views"].idxmax()
+    data_max_view = None
 
 
     return (data_max_view,)
@@ -741,7 +741,7 @@ def _(check_oldest_publised, mo, user_input_publised):
 
     mo.md(
         f"""
-        ### Find the oldest vidoe in this dataset
+        ### Find the oldest uploaded vidoe in this dataset
 
 
         **Your Input:**
@@ -757,10 +757,10 @@ def _(check_oldest_publised, mo, user_input_publised):
 @app.cell
 def _(data_youtube):
     ## Type here
-    data_recent_publised= data_youtube["published"].min()
+    data_oldest_publised = None
 
 
-    return (data_recent_publised,)
+    return (data_oldest_publised,)
 
 
 @app.cell(hide_code=True)
