@@ -4,20 +4,37 @@ __generated_with = "0.11.4"
 app = marimo.App(width="medium")
 
 
-@app.cell()
-def _(mo):
-    mo.carousel([
-        mo.md("## Introduction To Data Analysis"),
-        "By Ahlam Yusuf", "Using Marimo",
-        mo.md("## Let's Get Started")
-    ])
-    return
-
-
 @app.cell(hide_code=True)
 def _():
     import marimo as mo
     return (mo,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        """
+        # Welcome to Data Analysis with Python! 🚀
+
+        ## What is Data Analysis?
+        Data analysis is the process of inspecting, cleaning, transforming, and modeling data to discover useful information, draw conclusions, and support decision-making. It’s used in almost every industry, from finance and healthcare to marketing and sports.
+
+        ## Why Learn Data Analysis?
+        - **Make better decisions**: Use data to guide your choices.
+        - **Solve problems**: Identify trends, patterns, and outliers.
+        - **Tell stories**: Communicate insights through data visualizations.
+
+        ## What Will You Learn?
+        In this notebook, you’ll learn how to:
+
+        - Use **Pandas** to work with data.
+        - Clean and explore datasets.
+        - Analyze and visualize data to uncover insights.
+
+        Let’s get started!
+        """
+    )
+    return
 
 
 @app.cell(hide_code=True)
@@ -30,9 +47,11 @@ def _(mo):
 def _(mo):
     mo.accordion(
         {
-            "Pandas": mo.md("Used for working with tables and structured data."),
-            "Matplotlib": mo.md("Used for creating graphs and visualizations."),
-            "Numpy": mo.md("Used for number crunching and math operations.")
+            "Pandas": mo.md("**Pandas** is a data analyst's best friend! It’s used for working with tables and structured data, like spreadsheets or SQL tables. Analysts use it to clean, transform, and analyze data efficiently."),
+
+            "Matplotlib": mo.md("**Matplotlib** is a go-to library for creating graphs and visualizations. Data analysts use it to turn raw data into insightful charts, helping them communicate findings effectively."),
+
+            "NumPy": mo.md("**NumPy** is the backbone of numerical computing in Python. Data analysts use it for number crunching, performing complex math operations, and handling large datasets with ease.")
         }
     )
     return
@@ -55,14 +74,12 @@ def _(mo):
 @app.cell
 def _():
     import pandas as pd
-    import matplotlib as mlp
-    import numpy as np
-    return mlp, np, pd
+    return (pd,)
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.carousel([mo.md("## Let's start with Pandas"),
+    mo.carousel([mo.md("## Meet Pandas: Your Data Analysis Tool 🐼"),
                 mo.md("##Pandas has 3 core structures"), "##Series, Index and Dataframes",
                 mo.md(   """
         ### What is Series?
@@ -150,7 +167,24 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""##Now since we have an understading of Pandas structures, let's manipulate some ✨data ✨""")
+    mo.md(r"""## Now since we have an understading of Pandas structures, let's get to cookin""")
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        """
+        ### Our Data as a Dictionary 📖
+
+        Here’s our data stored as a Python dictionary:
+        ```python
+        population_dict = {'Muscat': 29393, 'Salalah': 2981, 'Sinaw': 38282, 'Sur': 298292, 'Sohar': 27271}
+        ```
+
+        Let’s convert this dictionary into a **Pandas Series** to make it easier to work with!
+        """
+    )
     return
 
 
@@ -198,16 +232,24 @@ def _():
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
-        r"""
-        ## Now, Let's Extract Data Between Salalah and Sur
+        """
+        \"""
+        ## Now, Let's Extract The Population of Salalah and Sur
 
         **Hint 1:** We start the same way as the previous challenge by using the `Series` data stored in the variable **population**.
 
-        **Hint 2:** Use **slicing** to extract data between two indices. For example, if the cities are ordered in the index, you can use `population["Salalah":"Sur"]`.
+        **Hint 2:** Use **label-based slicing** to extract data between two indices. For example, if the cities are ordered in the index, you can use `population["Salalah":"Sur"]`.  
+        **Note:** Label-based slicing is **inclusive**, meaning it includes both the start and end indices.
 
-        **Hint 3:** You can also use **key numbers** (positions) to slice the data. Remember, in programming, numbering starts from `0`. For example, if Salalah is at position `1` and Sur is at position `3`, you can use `population[1:4]` to get everything in between.
+        **Hint 3:** You can also use **positional slicing** (key numbers) to extract data. Remember, in programming, numbering starts from `0`. For example, if Salalah is at position `1` and Sur is at position `3`, you can use `population.iloc[1:4]` to get everything in between.  
+        **Pro Tip:** For larger datasets or when working with DataFrames, use `.iloc` for **position-based indexing**. It’s faster and more efficient. For example:
+        ```python
+        population.iloc[1:4]  # Selects rows 1 to 3 (exclusive of 4)
+        ```
+        **Note:** Positional slicing is **exclusive**, meaning it includes the start index but excludes the end index.
 
         **Hint 4:** Ensure the indices (city names) are spelled correctly and match the ones in your `Series`.
+        \"""
         """
     )
     return
@@ -223,12 +265,40 @@ def _():
 def _(mo):
     test_test = mo.md(
         """
-        Think Fast!, I am in a jam, and i need to show only 2 cities, Sinaw and Sur how to do so?
+        Think Fast!, I am in a jam, and i need to show only 2 cities, Sinaw and  Sur how to do so?
         """
     )
 
     mo.callout(value=test_test,kind= "neutral")
     return (test_test,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        """
+        ## Understanding Key Numbers in a Series
+
+        Let’s take a look at our `population` Series with **key numbers** (positions) added for clarity:
+
+        | Key Number | City    | Population |
+        |------------|---------|------------|
+        | 0          | Muscat  | 29393      |
+        | 1          | Salalah | 2981       |
+        | 2          | Sinaw   | 38282      |
+        | 3          | Sur     | 298292     |
+        | 4          | Sohar   | 27271      |
+
+        **Key Points:**
+
+        - Key numbers start from `0` (e.g., Muscat is at position `0`, Salalah is at position `1`, etc.).
+        - You can use these key numbers for **positional slicing** (e.g., `population.iloc[1:4]`).
+        - **Important Note:** Positional slicing is **exclusive**, meaning it includes the start index but excludes the end index. If you want to include the last value, you’ll need to add `+1` to the length of the Series.
+
+        Let’s practice extracting data using both **label-based slicing** and **positional slicing**!
+        """
+    )
+    return
 
 
 @app.cell(hide_code=True)
@@ -283,12 +353,6 @@ def _(mo):
 
     mo.callout(value=pandas_structure_test,kind= "warn")
     return (pandas_structure_test,)
-
-
-@app.cell
-def _():
-    ### Type here
-    return
 
 
 @app.cell(hide_code=True)
@@ -381,6 +445,7 @@ def _(mo):
 @app.cell
 def _():
     ## Type here
+
     return
 
 
@@ -433,14 +498,14 @@ def _(mo):
 
         Since our dataset is in CSV format, we’ll use `pd.read_csv()`.
 
-        **Hint:**`csv_file` is the path where our data is stored
+        **Hint:** `csv_file` is the path where our data is stored
         """
     )
     return
 
 
 @app.cell
-def _(check_data_loaded, csv_file, pd):
+def _(check_data_loaded):
     # Load the dataset
     data_youtube = None
 
@@ -477,6 +542,7 @@ def _(mo):
 @app.cell
 def _():
     # Type here
+
     return
 
 
@@ -527,12 +593,26 @@ def _(data_youtube, mo):
 
         ### 4. **Preview the Dataset**
         - **`data_youtube`**: Displays the entire dataset. This is useful for small datasets but can be overwhelming for larger ones.
+
+        **Output:**
+          {mo.ui.table(data_youtube)}
+
+        
         - **`data_youtube.head()`**: Displays the first 5 rows. Great for a quick overview:
           ```python
           data_youtube.head()
           ```
           **Output:**
           {mo.ui.table(data_youtube.head())}
+        """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(data_youtube, mo):
+    mo.md(
+        f"""
 
         - **`data_youtube.tail()`**: Displays the last 5 rows. Useful for checking the end of the dataset:
           ```python
@@ -540,6 +620,8 @@ def _(data_youtube, mo):
           ```
           **Output:**
           {mo.ui.table(data_youtube.tail())}
+
+          
         - **`data_youtube.sample()`**: Displays a random row. Helps you get a sense of the data distribution:
           ```python
           data_youtube.sample()
@@ -592,7 +674,8 @@ def _(mo):
 
         ### How to Check for Null Values
         Pandas provides the `.isnull()` function, which returns a DataFrame of `True` (for null values) and `False` (for non-null values).
-        Try it out, just like our previous example with `population["Muscat"]` we do the same but add `.isnull()`
+
+        Try it out on `data_youtube`, just like our previous example with `population["Muscat"]` we do the same but add `.isnull()`
         """
     )
     return
@@ -601,6 +684,7 @@ def _(mo):
 @app.cell
 def _():
     ## Type here
+
     return
 
 
@@ -614,7 +698,7 @@ def _(mo):
 
         **Hint:** Since we want to see the null values in every column, we
 
-        **Fun Fact 🤔** the `.sum()` function simmilar to the **Excel** function, it counts the
+        **Fun Fact 🤔** the `.sum()` function simmilar to the **Excel** function
         """
     )
     return
@@ -622,6 +706,8 @@ def _(mo):
 
 @app.cell
 def _(data_youtube):
+    ## Add .sum() to the end of this code to see the sum of the null values in each column
+
     data_youtube.isnull()
     return
 
@@ -634,6 +720,8 @@ def _(mo):
         What are the most common categories of videos in the dataset?
 
         `value_counts()` will tell you how many times each unique value appears in the list
+
+        **Hint: the get count in a category add the column name between the brackets like this `pd.value_counts("column_name")`
         """
     )
     return
@@ -642,6 +730,7 @@ def _(mo):
 @app.cell
 def _():
     ## Type here
+
     return
 
 
@@ -655,6 +744,13 @@ def _(mo):
         """
     )
     return
+
+
+@app.cell
+def _():
+    ## Type here
+    data_max_view = None
+    return (data_max_view,)
 
 
 @app.cell(hide_code=True)
@@ -676,15 +772,6 @@ def _(check_max_view, mo, user_input):
     return
 
 
-@app.cell
-def _(data_youtube):
-    ## Type here
-    data_max_view = None
-
-
-    return (data_max_view,)
-
-
 @app.cell(hide_code=True)
 def _(data_youtube, mo):
     def check_max_view(user_input):
@@ -693,7 +780,7 @@ def _(data_youtube, mo):
         elif user_input == data_youtube["Video views"].idxmax():
             return mo.md("🎉 **Correct!** You identified the video with the maximum views.")
         else:
-            return mo.md("❌ **Sorry! That's not the correct video.**")
+            return mo.md("❌ **Sorry! That's not the correct number.**")
 
     # Interactive input for the user
     user_input = mo.ui.number(
@@ -755,11 +842,9 @@ def _(check_oldest_publised, mo, user_input_publised):
 
 
 @app.cell
-def _(data_youtube):
+def _():
     ## Type here
     data_oldest_publised = None
-
-
     return (data_oldest_publised,)
 
 
