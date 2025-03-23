@@ -445,7 +445,6 @@ def _(mo):
 @app.cell
 def _():
     ## Type here
-
     return
 
 
@@ -456,7 +455,7 @@ def _():
 
     # Download latest version
     path = kagglehub.dataset_download("samithsachidanandan/most-popular-1000-youtube-videos")
-    csv_file = os.path.join(path, "Most Popular 1000 YouTube Videos.csv")
+    csv_file = os.path.join(path, "Most popular 1000 Youtube videos.csv")
     return csv_file, kagglehub, os, path
 
 
@@ -540,10 +539,34 @@ def _(mo):
 
 
 @app.cell
-def _():
+def _(check_length):
     # Type here
+    data_youtube_check = None
 
-    return
+    check_length(data_youtube_check)
+    return (data_youtube_check,)
+
+
+@app.cell(hide_code=True)
+def _(data_youtube, mo):
+    def check_length(data_length):
+        try: 
+            # Calculate the expected length of the dataset
+            expected_length = len(data_youtube)
+            if data_length is None:
+                return mo.md("👋 **Please type in your answer.**")
+            elif isinstance(data_length, int):  # Check if the input is an integer
+                if data_length == expected_length:
+                    return mo.md(f"🎉 **Correct!** The length of the dataset is {expected_length}.")
+                else:
+                    return mo.md(f"❌ **Incorrect!** The length of the dataset is {expected_length}, but you provided {data_length}.")
+            else:
+                return mo.md("❌ **Sorry! Try again. Hint: Use `len()` on the dataset.")
+        except AttributeError as e:
+            return mo.md(f"**Error:** The dataset is not loaded please load the dataset")
+        except Exception as e:
+            return mo.md(f"**An unexpected error occurred:** {e}")
+    return (check_length,)
 
 
 @app.cell(hide_code=True)
@@ -561,9 +584,61 @@ def _(mo):
 
 
 @app.cell
-def _():
+def _(check_columns):
     # Type here
-    return
+    data_youtube_column = None
+
+    check_columns(data_youtube_column)
+    return (data_youtube_column,)
+
+
+@app.cell(hide_code=True)
+def _(data_youtube, mo, pd):
+    def check_columns(user_describe):
+        try :
+            expected_columns = data_youtube.columns
+            if user_describe is None:
+                return mo.md("👋 **Please type in your answer.**")
+            elif isinstance(user_describe, pd.Index):  # Check if the input is a pandas Index
+                if user_describe.equals(expected_columns):  # Check if the columns match
+                    return mo.md(f"🎉 **Correct!** The columns of the dataset are {list(expected_columns)}.")
+                else:
+                    return mo.md(f"❌ **Incorrect!** The columns of the dataset are {list(expected_columns)}, but you provided {list(user_describe)}.")
+            else:
+                return mo.md("❌ **Sorry! Try again. Hint: Use `data_youtube.columns` to get the columns.")
+        except AttributeError as e:
+            return mo.md(f"**Error:** The dataset is not loaded please load the dataset")
+        except Exception as e:
+            return mo.md(f"**An unexpected error occurred:** {e}")
+    return (check_columns,)
+
+
+@app.cell(hide_code=True)
+def _(data_youtube, mo, pd):
+    def check_data_describe(user_describe):
+        try:
+            # Ensure data_youtube is a valid DataFrame
+            if data_youtube is None:
+                raise ValueError("The dataset is not loaded. `data_youtube` is None.")
+
+            # Calculate the expected result of data_youtube.describe()
+            expected_describe = data_youtube.describe()
+
+            if user_describe is None:
+                return mo.md("👋 **Please type in your answer.**")
+            elif isinstance(user_describe, pd.DataFrame):  # Check if the input is a pandas DataFrame
+                if user_describe.equals(expected_describe):  # Check if the DataFrame matches the expected result
+                    return mo.md("🎉 **Correct!** That's how you describe the dataset.")
+                else:
+                    return mo.md("❌ **Incorrect!** The result does not match the expected output.")
+            else:
+                return mo.md("❌ **Sorry! Try again. Hint: Use `data_youtube.describe()` to describe the dataset.")
+        
+        except AttributeError as e:
+            return mo.md(f"**Error:** The dataset is not loaded please load the dataset")
+        except Exception as e:
+            return mo.md(f"**An unexpected error occurred:** {e}")
+    return (check_data_describe,)
 
 
 @app.cell(hide_code=True)
@@ -581,29 +656,21 @@ def _(mo):
 
 
 @app.cell
-def _():
-    # Type here
-    return
+def _(check_data_describe):
+    check_stats = None
+    check_data_describe(check_stats)
+    return (check_stats,)
 
 
 @app.cell(hide_code=True)
-def _(data_youtube, mo):
+def _(dataset_preview, mo):
     mo.md(
         f"""
-
         ### 4. **Preview the Dataset**
         - **`data_youtube`**: Displays the entire dataset. This is useful for small datasets but can be overwhelming for larger ones.
 
         **Output:**
-          {mo.ui.table(data_youtube)}
-
-        
-        - **`data_youtube.head()`**: Displays the first 5 rows. Great for a quick overview:
-          ```python
-          data_youtube.head()
-          ```
-          **Output:**
-          {mo.ui.table(data_youtube.head())}
+        {dataset_preview}
         """
     )
     return
@@ -611,34 +678,211 @@ def _(data_youtube, mo):
 
 @app.cell(hide_code=True)
 def _(data_youtube, mo):
+    def display_dataset_preview(data):
+        try:
+            # Ensure data is a valid DataFrame
+            if data is None:
+                raise ValueError("The dataset is not loaded. `data_youtube` is None.")
+            
+            # Return the dataset as a table
+            return mo.ui.table(data)
+            
+        
+        except AttributeError as e:
+            return (f"**Error:** The dataset is not loaded please load the dataset")
+        except Exception as e:
+            return (f"**An unexpected error occurred:** {e}")
+    dataset_preview = display_dataset_preview(data_youtube)
+    return dataset_preview, display_dataset_preview
+
+
+@app.cell
+def _(check_data_describe):
+    # Type here
+    check_data = None
+    check_data_describe(check_data)
+    return (check_data,)
+
+
+@app.cell(hide_code=True)
+def _(data_youtube, mo):
+    def display_dataset_head(data):
+        try:
+            # Ensure data is a valid DataFrame
+            if data is None:
+                raise ValueError("The dataset is not loaded. `data_youtube` is None.")
+            
+            # Return the dataset as a table
+            return mo.ui.table(data)
+            
+        
+        except AttributeError as e:
+            return (f"**Error:** The dataset is not loaded please load the dataset")
+        except Exception as e:
+            return (f"**An unexpected error occurred:** {e}")
+    dataset_head = display_dataset_head(data_youtube)
+    return dataset_head, display_dataset_head
+
+
+@app.cell(hide_code=True)
+def _(data_youtube, mo, pd):
+    def check_data_head(user_describe):
+        try:
+            # Ensure data_youtube is a valid DataFrame
+            if data_youtube is None:
+                raise ValueError("The dataset is not loaded. `data_youtube` is None.")
+
+            expected_describe = data_youtube.head()
+
+            if user_describe is None:
+                return mo.md("👋 **Please type in your answer.**")
+            elif isinstance(user_describe, pd.DataFrame):  # Check if the input is a pandas DataFrame
+                if user_describe.equals(expected_describe):  # Check if the DataFrame matches the expected result
+                    return mo.md("🎉 **Correct!** That's how you check top dataset.")
+                else:
+                    return mo.md("❌ **Incorrect!** The result does not match the expected output.")
+            else:
+                return mo.md("❌ **Sorry! Try again. Hint: Use `data_youtube.head()` to view the top of the dataset")
+        
+        except AttributeError as e:
+            return mo.md(f"**Error:** The dataset is not loaded please load the dataset")
+        except Exception as e:
+            return mo.md(f"**An unexpected error occurred:** {e}")
+    return (check_data_head,)
+
+
+@app.cell(hide_code=True)
+def _(dataset_head, mo):
     mo.md(
         f"""
-
-        - **`data_youtube.tail()`**: Displays the last 5 rows. Useful for checking the end of the dataset:
-          ```python
-          data_youtube.tail()
-          ```
-          **Output:**
-          {mo.ui.table(data_youtube.tail())}
-
-          
-        - **`data_youtube.sample()`**: Displays a random row. Helps you get a sense of the data distribution:
-          ```python
-          data_youtube.sample()
-          ```
-          **Output:**
-          {mo.ui.table(data_youtube.sample())}
-
-        Use these functions to familiarize yourself with the dataset before diving into analysis!
+        - **`data_youtube.head()`**: Displays the first 5 rows. Great for a quick overview:
+              ```python
+              data_youtube.head()
+              ```
+              **Output:**
+              {dataset_head}
         """
     )
     return
 
 
 @app.cell
-def _():
-    # Type here
+def _(check_data_head):
+    check_head = None
+
+    check_data_head(check_head)
+    return (check_head,)
+
+
+@app.cell(hide_code=True)
+def _(data_youtube, mo):
+    def display_dataset_tail(data):
+        try:
+            # Ensure data is a valid DataFrame
+            if data is None:
+                raise ValueError("The dataset is not loaded. `data_youtube` is None.")
+            
+            # Return the dataset as a table
+            return mo.ui.table(data)
+            
+        
+        except AttributeError as e:
+            return (f"**Error:** The dataset is not loaded please load the dataset")
+        except Exception as e:
+            return (f"**An unexpected error occurred:** {e}")
+    dataset_tail = display_dataset_tail(data_youtube)
+    return dataset_tail, display_dataset_tail
+
+
+@app.cell(hide_code=True)
+def _(data_youtube, mo, pd):
+    def check_data_tail(user_describe):
+        try:
+            # Ensure data_youtube is a valid DataFrame
+            if data_youtube is None:
+                raise ValueError("The dataset is not loaded. `data_youtube` is None.")
+
+            expected_describe = data_youtube.tail()
+
+            if user_describe is None:
+                return mo.md("👋 **Please type in your answer.**")
+            elif isinstance(user_describe, pd.DataFrame):  # Check if the input is a pandas DataFrame
+                if user_describe.equals(expected_describe):  # Check if the DataFrame matches the expected result
+                    return mo.md("🎉 **Correct!** That's how you check the bottom dataset.")
+                else:
+                    return mo.md("❌ **Incorrect!** The result does not match the expected output.")
+            else:
+                return mo.md("❌ **Sorry! Try again. Hint: Use `data_youtube.tail()` to view the bottom of the dataset")
+        
+        except AttributeError as e:
+            return mo.md(f"**Error:** The dataset is not loaded please load the dataset")
+        except Exception as e:
+            return mo.md(f"**An unexpected error occurred:** {e}")
+    return (check_data_tail,)
+
+
+@app.cell(hide_code=True)
+def _(dataset_tail, mo):
+    mo.md(
+        f"""
+        - **`data_youtube.tail()`**: Displays the last 5 rows. Useful for checking the end of the dataset:
+              ```python 
+              data_youtube.tail()
+              ```
+              **Output:**
+              {dataset_tail}
+        """
+    )
     return
+
+
+@app.cell
+def _(check_data_tail):
+    check_tail = None
+    check_data_tail(check_tail)
+    return (check_tail,)
+
+
+@app.cell(hide_code=True)
+def _(data_youtube, mo):
+    def display_dataset_sample(data):
+        try:
+            # Ensure data is a valid DataFrame
+            if data is None:
+                raise ValueError("The dataset is not loaded. `data_youtube` is None.")
+            
+            # Return the dataset as a table
+            return mo.ui.table(data)
+        
+        except AttributeError as e:
+            return (f"**Error:** The dataset is not loaded please load the dataset")
+        except Exception as e:
+            return (f"**An unexpected error occurred:** {e}")
+    dataset_sample = display_dataset_sample(data_youtube)
+    return dataset_sample, display_dataset_sample
+
+
+@app.cell(hide_code=True)
+def _(dataset_sample, mo):
+    mo.md(
+        f"""
+        - **`data_youtube.sample()`**: Displays a random row. Helps you get a sense of the data distribution:
+          ```python
+          data_youtube.sample()
+          ```
+          **Output:**
+          {dataset_sample}
+        Use these functions to familiarize yourself with the dataset before diving into analysis!
+        """)
+    return
+
+
+@app.cell
+def _(display_dataset_sample):
+
+    check_sample = None
+    display_dataset_sample(check_sample)
+    return (check_sample,)
 
 
 @app.cell(hide_code=True)
@@ -682,10 +926,40 @@ def _(mo):
 
 
 @app.cell
-def _():
-    ## Type here
+def _(check_data_null):
+    # Type here
+    data_null = None
 
-    return
+    check_data_null(data_null)
+    return (data_null,)
+
+
+@app.cell(hide_code=True)
+def _(data_youtube, mo, pd):
+    def check_data_null(data):
+        try:
+            # Ensure data_youtube is a valid DataFrame
+            if data_youtube is None:
+                raise ValueError("The dataset is not loaded. `data_youtube` is None.")
+
+            # Calculate the expected result of data_youtube.isnull()
+            expected_isnull = data_youtube.isnull()
+
+            if data is None:
+                return mo.md("👋 **Please type in your answer.**")
+            elif isinstance(data, pd.DataFrame):  # Check if the input is a pandas DataFrame
+                if data.equals(expected_isnull):  # Check if the DataFrame matches the expected result
+                    return mo.md("🎉 **Correct!** That's how you check for missing values.")
+                else:
+                    return mo.md("❌ **Incorrect!** The result does not match the expected output.")
+            else:
+                return mo.md("❌ **Sorry! Try again. Hint: Use `data_youtube.isnull()` to check for missing values.")
+
+        except AttributeError as e:
+            return mo.md(f"**Error:** The dataset is not loaded please load the dataset")
+        except Exception as e:
+            return mo.md(f"**An unexpected error occurred:** {e}")
+    return (check_data_null,)
 
 
 @app.cell(hide_code=True)
@@ -705,11 +979,24 @@ def _(mo):
 
 
 @app.cell
-def _(data_youtube):
-    ## Add .sum() to the end of this code to see the sum of the null values in each column
+def _(check_data_null_sum):
+    # Type here
+    data_na_sum = None
 
-    data_youtube.isnull()
-    return
+    check_data_null_sum(data_na_sum)
+    return (data_na_sum,)
+
+
+@app.cell(hide_code=True)
+def _(mo, pd):
+    def check_data_null_sum(data):
+        if data is None:
+            return mo.md("👋 **Please type in your answer.**")
+        elif isinstance(data, pd.Series):  # Check if the input is a pandas Series
+            return mo.md("🎉 **Correct!** That's how you check for null values.")
+        else:
+            return mo.md("❌ **Sorry! Try again. Hint: Add `.sum()` at the end.**")
+    return (check_data_null_sum,)
 
 
 @app.cell(hide_code=True)
@@ -717,21 +1004,44 @@ def _(mo):
     mo.md(
         r"""
         ## Let's ask questions about based on the dataset
-        What are the most common categories of videos in the dataset?
+        What are the most common catergory of videos types in the dataset?
 
         `value_counts()` will tell you how many times each unique value appears in the list
 
-        **Hint: the get count in a category add the column name between the brackets like this `pd.value_counts("column_name")`
+        **Hint: the get count in a category add the column name between the brackets like this `pd.[column_name"].value_counts()`
         """
     )
     return
 
 
 @app.cell
-def _():
+def _(check_value_counts):
     ## Type here
+    data_category = None
 
-    return
+    check_value_counts(data_category)
+    return (data_category,)
+
+
+@app.cell(hide_code=True)
+def _(data_youtube, mo, pd):
+    def check_value_counts(data):
+        try:
+            expected_count = data_youtube['Category'].value_counts()
+            if data is None:
+                return mo.md("👋 **Please type in your answer.**")
+            elif isinstance(data, pd.Series):  # Check if the input is a pandas Series
+                if data.equals(expected_count):  # Check if the Series matches the expected result
+                    return mo.md("🎉 **Correct!** That's how you check value counts for a column.")
+                else:
+                    return mo.md("❌ **Incorrect!** The result does not match the expected output.")
+            else:
+                return mo.md("❌ **Sorry! Try again. Hint: Use `data_youtube['Category'].value_counts()` to check value counts.")
+        except AttributeError as e:
+            return mo.md(f"**Error:** The dataset is not loaded please load the dataset")
+        except Exception as e:
+            return mo.md(f"**An unexpected error occurred:** {e}")
+    return (check_value_counts,)
 
 
 @app.cell(hide_code=True)
@@ -761,21 +1071,26 @@ def _(check_max_view, mo, user_input):
         f"""
         ### Find the Video with the Maximum Views
 
-
-        **Your Input:**
-        {user_input}
-
         **Feedback:**
         {check_max_view(user_input.value)}
+
+            **Your Input:**
+        {user_input}
         """
     )
+    return
+
+
+@app.cell
+def _():
+    #Type here
     return
 
 
 @app.cell(hide_code=True)
 def _(data_youtube, mo):
     def check_max_view(user_input):
-        if user_input is None:
+        if user_input == 0:
             return mo.md("👋 **Please type in your answer.**")
         elif user_input == data_youtube["Video views"].idxmax():
             return mo.md("🎉 **Correct!** You identified the video with the maximum views.")
@@ -786,27 +1101,58 @@ def _(data_youtube, mo):
     user_input = mo.ui.number(
         label="Enter the index of the video with the maximum views:",
         start=0,
-        stop=len(data_youtube) + 1
+        stop=10000000000000
     )
     return check_max_view, user_input
 
 
 @app.cell(hide_code=True)
-def _(check_max_view, mo, user_input):
+def _(check_max_likes, mo, user_input_like):
     # Display the dataset and feedback
 
     mo.md(
         f"""
         ### Find the Video with the Maximum Likes
 
+        **Feedback:**
+        {check_max_likes(user_input_like.value)}
 
         **Your Input:**
-        {user_input}
-
-        **Feedback:**
-        {check_max_view(user_input.value)}
+        {user_input_like}
         """
+
+
     )
+    return
+
+
+@app.cell
+def _():
+    return
+
+
+@app.cell(hide_code=True)
+def _(data_youtube, mo):
+    def check_max_likes(user_input):
+
+        if user_input == 0:
+            return mo.md("👋 **Please type in your answer.**")
+        elif user_input == data_youtube["Likes"].idxmax():
+            return mo.md("🎉 **Correct!** You identified the video with the maximum views.")
+        else:
+            return mo.md("❌ **Sorry! That's not the correct number.**")
+
+    # Interactive input for the user
+    user_input_like = mo.ui.number(
+        label="Enter the index of the video with the maximum views:",
+        start=0,
+        stop= 100000000000000)
+    return check_max_likes, user_input_like
+
+
+@app.cell
+def _():
+    #Type here
     return
 
 
@@ -830,12 +1176,11 @@ def _(check_oldest_publised, mo, user_input_publised):
         f"""
         ### Find the oldest uploaded vidoe in this dataset
 
-
-        **Your Input:**
-        {user_input_publised}
-
         **Feedback:**
         {check_oldest_publised(user_input_publised.value)}
+
+            **Your Input:**
+        {user_input_publised}
         """
     )
     return
@@ -851,7 +1196,7 @@ def _():
 @app.cell(hide_code=True)
 def _(data_youtube, mo):
     def check_oldest_publised(user_input):
-        if user_input is None:
+        if user_input == 0:
             return mo.md("👋 **Please type in your answer.**")
         elif user_input == data_youtube["published"].min():
             return mo.md("🎉 **Correct!** You identified the oldest video.")
